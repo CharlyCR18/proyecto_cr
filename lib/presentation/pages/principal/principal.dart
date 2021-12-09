@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_cr/presentation/pages/model/user.dart';
 import 'package:proyecto_cr/presentation/pages/principal/notes_page.dart';
 
 class Principal extends StatelessWidget {
   static final String title = 'Take Control';
-  const Principal({Key? key}) : super(key: key);
+  User usuario;
+  Principal({Key? key, required this.usuario}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -19,6 +21,6 @@ class Principal extends StatelessWidget {
             elevation: 0,
           ),
         ),
-        home: NotesPage(),
+        home: NotesPage(usuario: usuario,),
       );
 }

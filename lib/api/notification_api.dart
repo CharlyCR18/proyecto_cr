@@ -21,7 +21,7 @@ class NotificationApi {
   }
 
   static Future init({bool initScheduled = false}) async{
-    final android = AndroidInitializationSettings('@mipmap/ic_launcher');
+    final android = AndroidInitializationSettings('@mipmap/bloqueo_logo');
     final iOS = IOSInitializationSettings();
     final settings = InitializationSettings(android: android, iOS: iOS);
     
@@ -53,7 +53,7 @@ class NotificationApi {
       payload: payload
       );
 
-  static void ShowScheduledNotification ({
+  static void showScheduledNotification ({
     int id = 0,
     String? title,
     String? body,

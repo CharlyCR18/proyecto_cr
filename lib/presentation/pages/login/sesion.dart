@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:proyecto_cr/presentation/pages/db/user_database.dart';
 import 'package:proyecto_cr/presentation/pages/principal/notes_page.dart';
 import 'package:proyecto_cr/presentation/pages/principal/principal.dart';
 
@@ -14,13 +15,67 @@ class Sesion extends StatefulWidget {
 class _SesionState extends State<Sesion> {
   String negro = "0xDD000000";
   double ver = 18;
-  TextEditingController passwordCtrl = new TextEditingController();
+  final _conUserName = TextEditingController();
+  final passwordCtrl = new TextEditingController();
   bool _secureText = true;
   final _formKey = GlobalKey<FormState>();
+  var dbHelper;
+  String msj = "Iniciado";
+
+  final snackError = SnackBar(
+    content: Text("Error: Revise sus datos"),
+    backgroundColor: Colors.red,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = UserDatabase;
+  }
+
+  login() async {
+    String uid = _conUserName.text;
+    String passwd = passwordCtrl.text;
+
+    if (uid.isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(snackError);
+      setState(() {
+        msj = "Introduzca su usuario";
+      });
+    } else if (passwd.isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(snackError);
+      setState(() {
+        msj = "Introduzca su contraseña";
+      });
+    } else {
+      await UserDatabase.instance.getLoginUsers(uid, passwd).then((UserData) {
+        if (UserData != null) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Principal(usuario: UserData,)));
+        } else {
+          ScaffoldMessenger.of(context)
+            ..removeCurrentSnackBar()
+            ..showSnackBar(snackError);
+          setState(() {
+            msj = "Usuario no encontrado";
+          });
+        }
+      }).catchError((error) {
+        setState(() {
+          msj = "Error en el login";
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+        backgroundColor: Colors.blue,
         appBar: AppBar(
           title: Text("Sesion"),
         ),
@@ -29,10 +84,11 @@ class _SesionState extends State<Sesion> {
           //decoration: const BoxDecoration(color: Color(0xFF03A9F4),),
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 50),
           child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
+              child: Form(
+            key: _formKey,
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: ver),
@@ -47,6 +103,7 @@ class _SesionState extends State<Sesion> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: ver),
                   child: TextFormField(
+                    controller: _conUserName,
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(
                         RegExp(r'[a-zA-Z]+|\s'),
@@ -116,29 +173,13 @@ class _SesionState extends State<Sesion> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: ver),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
-                        );
-
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Principal()));
-                      }
-                    },
+                    onPressed: login,
                     child: const Text('Iniciar Sesion'),
                   ),
                 ),
               ],
             ),
-              )
-            
-          ),
+          )),
         ));
   }
 }

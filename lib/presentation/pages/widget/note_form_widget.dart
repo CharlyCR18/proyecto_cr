@@ -33,7 +33,15 @@ class NoteFormWidget extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              buildTitle(),
+              Text(
+                "Importancia", 
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                ),
               Row(
                 children: [
                   Switch(
@@ -51,6 +59,8 @@ class NoteFormWidget extends StatelessWidget {
                   )
                 ],
               ),
+              SizedBox(height: 8),
+              buildTitle(),
               SizedBox(height: 8),
               buildDescription(),
               SizedBox(height: 1),
@@ -79,7 +89,7 @@ class NoteFormWidget extends StatelessWidget {
       );
 
   Widget buildDescription() => TextFormField(
-        maxLines: 5,
+        maxLines: 3,
         initialValue: description,
         style: TextStyle(color: Colors.white60, fontSize: 18),
         decoration: InputDecoration(

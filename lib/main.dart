@@ -5,7 +5,6 @@ import 'package:proyecto_cr/presentation/pages/login/sesion.dart';
 import 'package:proyecto_cr/presentation/pages/on_board/onboard.dart';
 import 'package:proyecto_cr/presentation/pages/principal/notes_page.dart';
 import 'package:proyecto_cr/presentation/pages/principal/principal.dart';
-import 'package:proyecto_cr/presentation/pages/profile/profile.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,17 +30,16 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     
     NotificationApi.init();
-    listenNotifications();
+    //listenNotifications();
   }
   
 
-  void listenNotifications() => NotificationApi.onNotifications.stream.listen(onClickedNotification);
+  //void listenNotifications() => NotificationApi.onNotifications.stream.listen(onClickedNotification);
   
-  void onClickedNotification(String? payload) => 
+  /*void onClickedNotification(String? payload) => 
   Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => Profile(payload: payload,),
-    ));
-
+    builder: (context) => Principal(),
+    ));*/
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(

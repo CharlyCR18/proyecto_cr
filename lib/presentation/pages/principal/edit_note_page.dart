@@ -26,6 +26,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
   var _fechaSeleccionada;
   var _tiempoSeleccionado;
   String fechaCompleta = "";
+  DateTime aux = DateTime.now();
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     });
   }
 
-  Future <DateTime?> getDatePickerWidget() {
+  Future<DateTime?> getDatePickerWidget() {
     return showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -76,72 +77,132 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
     );
   }
 
-  DateTime join(DateTime _fechaSeleccionada, TimeOfDay _tiempoSeleccionado) {
-  return new DateTime(_fechaSeleccionada.year, _fechaSeleccionada.month, _fechaSeleccionada.day, _tiempoSeleccionado.hour, _tiempoSeleccionado.minute);
+  DateTime hora(DateTime aux, TimeOfDay _tiempoSeleccionado) {
+    return new DateTime(aux.year, aux.month, aux.day, _tiempoSeleccionado.hour,
+        _tiempoSeleccionado.minute);
   }
 
-  
+  DateTime join(DateTime _fechaSeleccionada, TimeOfDay _tiempoSeleccionado) {
+    return new DateTime(
+        _fechaSeleccionada.year,
+        _fechaSeleccionada.month,
+        _fechaSeleccionada.day,
+        _tiempoSeleccionado.hour,
+        _tiempoSeleccionado.minute);
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
+        title: Text(
+          "Configurar",
+          textAlign: TextAlign.center,
+        ),
         actions: [buildButton()],
       ),
-      body: Column(
-        children: [
-          Form(
-            key: _formKey,
-            child: NoteFormWidget(
-              isImportant: isImportant,
-              number: number,
-              title: title,
-              description: description,
-              onChangedImportant: (isImportant) =>
-                  setState(() => this.isImportant = isImportant),
-              onChangedNumber: (number) => setState(() => this.number = number),
-              onChangedTitle: (title) => setState(() => this.title = title),
-              onChangedDescription: (description) =>
-                  setState(() => this.description = description),
+      body: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        child: SingleChildScrollView(
+            child: Column(
+          children: [
+            Form(
+              key: _formKey,
+              child: NoteFormWidget(
+                isImportant: isImportant,
+                number: number,
+                title: title,
+                description: description,
+                onChangedImportant: (isImportant) =>
+                    setState(() => this.isImportant = isImportant),
+                onChangedNumber: (number) =>
+                    setState(() => this.number = number),
+                onChangedTitle: (title) => setState(() => this.title = title),
+                onChangedDescription: (description) =>
+                    setState(() => this.description = description),
+              ),
             ),
-          ),
-          Text("Seleccione la fecha"),
-          SizedBox(height: 18,),
-          ElevatedButton.icon(
-            onPressed: callDatePicker, 
-            icon: Icon(Icons.calendar_today_rounded), 
-            label: Text("Seleccionar")
-          ),
-          SizedBox(height: 18,),
-          Text(
-            //"$_fechaSeleccionada",
-            _fechaSeleccionada == null
-                ? 'Sin fecha seleccionada'
-                : DateFormat.yMMMd().format(_fechaSeleccionada ?? DateTime.now()),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            Text(
+              "Seleccione la fecha",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
             ),
-          ),
-          Text("Seleccione la Hora"),
-          ElevatedButton.icon(
-            onPressed: callTimePicker, 
-            icon: Icon(Icons.watch_later_outlined),
-            label: Text("Seleccionar")
-          ),
-          Text(
-            //"$_tiempoSeleccionado",
-            _tiempoSeleccionado == null
-                ? 'Sin hora seleccionada'
-                : _tiempoSeleccionado.toString(),
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            SizedBox(
+              height: 18,
             ),
-          ),
-        ],
-      )
-      );
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: callDatePicker,
+                  icon: Icon(
+                    Icons.calendar_today_rounded,
+                  ),
+                  label: Icon(Icons.search_outlined),
+                ),
+                SizedBox(
+                  width: 18,
+                ),
+                Text(
+                  //"$_fechaSeleccionada",
+                  _fechaSeleccionada == null
+                      ? 'Sin fecha seleccionada'
+                      : DateFormat.yMMMd()
+                          .format(_fechaSeleccionada ?? DateTime.now()),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+              "Seleccione la hora",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: callTimePicker,
+                  icon: Icon(Icons.watch_later_outlined),
+                  label: Icon(Icons.search_outlined),
+                ),
+                SizedBox(
+                  width: 18,
+                ),
+                Text(
+                  //"$_tiempoSeleccionado",
+                  _tiempoSeleccionado == null
+                      ? 'Sin hora seleccionada'
+                      : DateFormat('kk:mm')
+                          .format(hora(aux, _tiempoSeleccionado)),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        )),
+      ));
 
   Widget buildButton() {
     final isFormValid = title.isNotEmpty && description.isNotEmpty;

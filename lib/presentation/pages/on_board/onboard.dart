@@ -59,25 +59,6 @@ class OnBoard extends StatelessWidget {
           SizedBox(
             height: 50,
           ),
-          ElevatedButton(
-            onPressed: () => NotificationApi.ShowNotification(
-            title: "Hola",
-            body: "Este es el cuerpo",
-            payload: "nose"
-            ), 
-            child: Text("Notificacion")
-          ),
-          ElevatedButton(
-            onPressed: () {
-              NotificationApi.ShowScheduledNotification(
-                title: 'Programada',
-                body: 'Esta notificacion fue programada',
-                payload: 'programada',
-                scheduledDate: DateTime.now().add(Duration(seconds: 5)),
-              );
-            },
-            child: Text("Notificacion programada"),
-          ),
           //INICIA SESION
           OutlinedButton(
             onPressed: () {
