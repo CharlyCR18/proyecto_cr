@@ -23,23 +23,31 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
   @override
-  void initState() {
+  initState() {
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
     
     NotificationApi.init();
     //listenNotifications();
   }
   
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
 
-  //void listenNotifications() => NotificationApi.onNotifications.stream.listen(onClickedNotification);
-  
-  /*void onClickedNotification(String? payload) => 
-  Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => Principal(),
-    ));*/
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.inactive || 
+    state == AppLifecycleState.detached) return;
+  }
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(

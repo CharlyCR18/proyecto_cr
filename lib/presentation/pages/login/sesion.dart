@@ -54,8 +54,9 @@ class _SesionState extends State<Sesion> {
     } else {
       await UserDatabase.instance.getLoginUsers(uid, passwd).then((UserData) {
         if (UserData != null) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Principal(usuario: UserData,)));
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Principal(usuario: UserData)), (Route<dynamic> route) => false);
+          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Principal(usuario: UserData,)));
+          //Navigator.push(context, MaterialPageRoute(builder: (context) => Principal(usuario: UserData,)));
         } else {
           ScaffoldMessenger.of(context)
             ..removeCurrentSnackBar()

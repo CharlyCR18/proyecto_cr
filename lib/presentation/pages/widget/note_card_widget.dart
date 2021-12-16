@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:proyecto_cr/presentation/pages/model/note.dart';
@@ -102,7 +100,10 @@ class NoteCardWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.max,
                   children: [
                     SizedBox(height: 18.0,),
-                    Text(
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        child: Text(
                       note.title,
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -111,6 +112,9 @@ class NoteCardWidget extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                        ),
+                    ),
+                    
                     //SizedBox(height: 18),
                     /*Text(
                       time,
@@ -123,7 +127,10 @@ class NoteCardWidget extends StatelessWidget {
                       ),
                     ),*/
                     SizedBox(height: 10),
-                    Text(
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 18, vertical: 5),
+                        child: Text(
                       note.description,
                       textAlign: TextAlign.justify,
                       style: TextStyle(
@@ -132,6 +139,10 @@ class NoteCardWidget extends StatelessWidget {
                         //fontWeight: FontWeight.bold,
                       ),
                     ),
+                        ),
+
+                    ),
+                    
                     SizedBox(height: 18),
                   ],
                 ),

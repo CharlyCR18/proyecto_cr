@@ -122,82 +122,175 @@ class _AddEditNotePageState extends State<AddEditNotePage> {
                     setState(() => this.description = description),
               ),
             ),
-            Text(
-              "Seleccione la fecha",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
+            Text("___________________________________________________", style: TextStyle(color: Colors.blue),),
+            //TEXTO
             SizedBox(
               height: 18,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                ElevatedButton.icon(
-                  onPressed: callDatePicker,
-                  icon: Icon(
-                    Icons.calendar_today_rounded,
-                  ),
-                  label: Icon(Icons.search_outlined),
-                ),
-                SizedBox(
-                  width: 18,
-                ),
-                Text(
-                  //"$_fechaSeleccionada",
-                  _fechaSeleccionada == null
-                      ? 'Sin fecha seleccionada'
-                      : DateFormat.yMMMd()
-                          .format(_fechaSeleccionada ?? DateTime.now()),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          "Fecha",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          "|",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          "Hora",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    )),
               ],
             ),
             SizedBox(
-              height: 25,
+              height: 18,
             ),
-            Text(
-              "Seleccione la hora",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white70,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
+            //BOTONES
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                ElevatedButton.icon(
-                  onPressed: callTimePicker,
-                  icon: Icon(Icons.watch_later_outlined),
-                  label: Icon(Icons.search_outlined),
-                ),
-                SizedBox(
-                  width: 18,
-                ),
-                Text(
-                  //"$_tiempoSeleccionado",
-                  _tiempoSeleccionado == null
-                      ? 'Sin hora seleccionada'
-                      : DateFormat('kk:mm')
-                          .format(hora(aux, _tiempoSeleccionado)),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: callDatePicker,
+                          child: Icon(
+                            Icons.calendar_today_rounded,
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          "-",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Center(
+                        child: ElevatedButton(
+                          onPressed: callTimePicker,
+                          child: Icon(Icons.watch_later_outlined),
+                        ),
+                      ),
+                    )),
+              ],
+            ),
+            SizedBox(
+              height: 18,
+            ),
+            //FECHA FINAL
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          //"$_fechaSeleccionada",
+                          _fechaSeleccionada == null
+                              ? 'Sin fecha seleccionada'
+                              : DateFormat.yMMMd()
+                                  .format(_fechaSeleccionada ?? DateTime.now()),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          _fechaSeleccionada == null || _tiempoSeleccionado == null
+                              ? '...'
+                              : 'a las',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Center(
+                        child: Text(
+                          //"$_tiempoSeleccionado",
+                          _tiempoSeleccionado == null
+                              ? 'Sin hora seleccionada'
+                              : DateFormat('kk:mm')
+                                  .format(hora(aux, _tiempoSeleccionado)),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )),
               ],
             ),
           ],

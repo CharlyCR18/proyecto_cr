@@ -94,7 +94,7 @@ class NoteFormWidget extends StatelessWidget {
         style: TextStyle(color: Colors.white60, fontSize: 18),
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: 'Añada una descripcion',
+          hintText: 'Mensaje motivacional',
           hintStyle: TextStyle(color: Colors.white60),
         ),
         validator: (title) => title != null && title.isEmpty

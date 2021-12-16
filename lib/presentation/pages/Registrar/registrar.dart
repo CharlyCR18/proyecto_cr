@@ -259,7 +259,11 @@ class _RegistrarState extends State<Registrar> {
                                 content: Text("Error: Revise sus datos"),
                                 backgroundColor: Colors.red,
                               );
-                              if (passwordCtrl.text == repeatPassCtrl.text) {
+                              if (_conUserName.text.isEmpty || _conEmail.text.isEmpty || passwordCtrl.text.isEmpty || repeatPassCtrl.text.isEmpty) {
+                                ScaffoldMessenger.of(context)
+                                  ..removeCurrentSnackBar()
+                                  ..showSnackBar(snackError);
+                              } else if (passwordCtrl.text == repeatPassCtrl.text) {
                                 ScaffoldMessenger.of(context)
                                   ..removeCurrentSnackBar()
                                   ..showSnackBar(snack);

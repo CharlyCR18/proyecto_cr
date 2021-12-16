@@ -6,6 +6,7 @@ import 'package:proyecto_cr/api/notification_api.dart';
 import 'package:proyecto_cr/presentation/pages/Registrar/registrar.dart';
 import 'package:proyecto_cr/presentation/pages/bloqueo/bloqueo.dart';
 import 'package:proyecto_cr/presentation/pages/db/notes_database.dart';
+import 'package:proyecto_cr/presentation/pages/login/sesion.dart';
 import 'package:proyecto_cr/presentation/pages/model/note.dart';
 import 'package:proyecto_cr/presentation/pages/model/user.dart';
 import 'package:proyecto_cr/presentation/pages/principal/edit_note_page.dart';
@@ -14,9 +15,6 @@ import 'package:proyecto_cr/presentation/pages/principal/principal.dart';
 import 'package:proyecto_cr/presentation/pages/widget/note_card_widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/riverpod.dart';
-
-//final notificacionStateProvider = StateProvider<bool>((ref) {return notificationv;});
-//final bloqueoStateProvider = StateProvider<bool>((refe) {return bloqueov;});
 
 class Boleanos {
   bool notificationv = false;
@@ -53,6 +51,7 @@ class _NotesPageState extends State<NotesPage>
   late String nomContra;
 
   late String numNotes;
+  bool condicion = true;
 
   //bool notificationv = false;
   //bool bloqueov = false;
@@ -73,8 +72,7 @@ class _NotesPageState extends State<NotesPage>
 
     _timeString = _formatDateTime(DateTime.now());
 
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
-    Timer.periodic(Duration(seconds: 1), (Timer t2) => notaTime(_timeString));
+    iniciaTimers(condicion);
 
     NotificationApi.init();
 
@@ -87,7 +85,25 @@ class _NotesPageState extends State<NotesPage>
     nomContra = widget.usuario.contra;
   }
 
-  void iniciarbools(){
+  void iniciaTimers(bool condicion) {
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
+      if (condicion == true) {
+        _getTime();
+      } else {
+        t.cancel();
+      }
+    });
+
+    Timer.periodic(Duration(seconds: 1), (Timer t2) {
+      if (condicion == true) {
+        notaTime(_timeString);
+      } else {
+        t2.cancel();
+      }
+    });
+  }
+
+  void iniciarbools() {
     setState(() {
       booln = bools.notificationv.toString();
     });
@@ -96,11 +112,25 @@ class _NotesPageState extends State<NotesPage>
     });
   }
 
-  void NotificacionAviso() => NotificationApi.ShowNotification(title: "Dia programado", body: "llegó la hora, ahora yo tengo el control :D", payload: "UwU");
-  
-  void PantallaBloqueo() => Navigator.push(context, MaterialPageRoute(builder: (context) => Bloqueo(usuario: user,)));
+  void NotificacionAviso() => NotificationApi.ShowNotification(
+      title: "Dia programado",
+      body: "llegó la hora, ahora yo tengo el control :D",
+      payload: "UwU");
 
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => Principal()));
+  void PantallaBloqueo(String mensaje) {
+    setState(() {
+      condicion = false;
+    });
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Bloqueo(
+                  usuario: user,
+                  mensaje: mensaje,
+                )));
+  }
+
+  //Navigator.push(context, MaterialPageRoute(builder: (context) => Principal()));
 
   void notaTime(String tiempo) {
     String t;
@@ -109,7 +139,8 @@ class _NotesPageState extends State<NotesPage>
       DateTime tiempoNota = notes[i].createdTime;
       t = DateFormat('yyyy-MM-dd kk:mm').format(tiempoNota);
 
-      DateTime antesTiempo = notes[i].createdTime.subtract(Duration(minutes: 1));
+      DateTime antesTiempo =
+          notes[i].createdTime.subtract(Duration(minutes: 1));
       at = DateFormat('yyyy-MM-dd kk:mm').format(antesTiempo);
 
       if (at == tiempo && bools.notificationv == false) {
@@ -124,7 +155,7 @@ class _NotesPageState extends State<NotesPage>
       }
 
       if (t == tiempo && bools.bloqueov == false) {
-        PantallaBloqueo();
+        PantallaBloqueo(notes[i].description.toString());
         setState(() {
           bools.bloqueov = true;
           //boolb = bools.bloqueov.toString();
@@ -135,28 +166,6 @@ class _NotesPageState extends State<NotesPage>
       }
     }
   }
-
-  /*void getTiempos(String tiempoActual) async {
-    var dbClient = await NotesDatabase.instance.database;
-    var res = await dbClient
-        .rawQuery("SELECT * FROM notes WHERE time = '$tiempoActual'");
-
-    setState(() {
-      p = res.length.toString();
-    });
-
-    if (res.length > 0) {
-      setState(() {
-        p = "Ya llegó al tiempo";
-      });
-      //p = "Ya llegó al tiempo";
-      //onClickNotification();
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
-      //return Note.fromJson(res.first);
-    }
-
-    //return null;
-  }*/
 
   void _getTime() {
     final DateTime now = DateTime.now();
@@ -190,6 +199,35 @@ class _NotesPageState extends State<NotesPage>
     numNotes = notes.length.toString();
   }
 
+  _alertDialog() async {
+    var alertDialogs = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Cerrar sesión"),
+            content: Text(
+              "¿Seguro que deseas cerrar tu sesión?",
+              textAlign: TextAlign.justify,
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context, "Regresar"),
+                  child: Text("Cancelar")),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      condicion = false;
+                    });
+                    //Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Sesion()), (Route<dynamic> route) => false);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Sesion()));
+                  },
+                  child: Text("Aceptar")),
+            ],
+          );
+        });
+    return alertDialogs;
+  }
+
   //Inicia lo grafico
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -202,23 +240,42 @@ class _NotesPageState extends State<NotesPage>
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Builder(
-              builder: (context) =>IconButton(
-                onPressed: () => Scaffold.of(context).openDrawer(), 
-                icon: Icon(Icons.person_outline_outlined,  color: Colors.blue,)
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    child: Builder(
+                      builder: (context) => IconButton(
+                        onPressed: () => Scaffold.of(context).openDrawer(),
+                        icon: Icon(
+                          Icons.person_outline_outlined,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              Container(
-                width: 280,
-                child: Center(
-                child: Text("Hola $nomUser ;)"),
-              ),
-              ),
-              
-              
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    child: Center(
+                      child: Text("Hola $nomUser ;)"),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    child: IconButton(
+                      onPressed: _alertDialog,
+                      icon: Icon(
+                        Icons.power_settings_new_rounded,
+                        color: Colors.red.shade400,
+                      ),
+                    ),
+                  ),
+                ),
               ],
-            ), 
-            
+            ),
           ),
           /*title: Center(
             child: Text(nomUser, textAlign: TextAlign.center),
@@ -237,55 +294,84 @@ class _NotesPageState extends State<NotesPage>
             width: double.infinity,
             color: Colors.black,
             child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 40,
-                backgroundImage: AssetImage("assets/images/bloqueo_logo.png"),
-              ),
-              SizedBox(height: 18,),
-              Text(
-                idUser.toString(),
-                textAlign: TextAlign.center,          
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 28 
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 40,
+                  backgroundImage: AssetImage("assets/images/bloqueo_logo.png"),
                 ),
+                SizedBox(
+                  height: 20,
                 ),
-              SizedBox(height: 18,),
-              Text(
-                nomUser, 
-                textAlign: TextAlign.center,          
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 28 
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Icon(
+                      Icons.tag,
+                      color: Colors.purple,
+                    ),
+                    Text(
+                      "ID: " + idUser.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.blue, fontSize: 18),
+                    ),
+                  ],
                 ),
+                SizedBox(
+                  height: 20,
                 ),
-                SizedBox(height: 20,),
-                Text(
-                nomCorreo, 
-                textAlign: TextAlign.center,          
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 15 
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Icon(
+                      Icons.person_outline_outlined,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      nomUser,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.blue, fontSize: 28),
+                    ),
+                  ],
                 ),
+                SizedBox(
+                  height: 20,
                 ),
-                SizedBox(height: 20,),
-                Text(
-                "Dias programados: $numNotes", 
-                textAlign: TextAlign.center,          
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 15 
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Icon(
+                      Icons.mail_outline_outlined,
+                      color: Colors.green,
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      nomCorreo,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                    ),
+                  ],
                 ),
+                SizedBox(
+                  height: 20,
                 ),
-            ],
+              ],
+            ),
           ),
-          ), 
-          
         ),
         body: isLoading
             ? CircularProgressIndicator()
@@ -316,7 +402,7 @@ class _NotesPageState extends State<NotesPage>
             refreshNotes();
           },
         ),
-  );
+      );
 
   Widget buildNotes() => StaggeredGridView.countBuilder(
         padding: EdgeInsets.all(8),

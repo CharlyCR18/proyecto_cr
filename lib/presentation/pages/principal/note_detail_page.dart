@@ -38,36 +38,77 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          actions: [editButton(), deleteButton()],
+          actions: [deleteButton()],
         ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : Padding(
-                padding: EdgeInsets.all(12),
-                child: ListView(
-                  padding: EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(horizontal: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     //Titulo de la nota
-                    Text(
-                      note.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        note.title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 50),
                     //se btiene la fecha de creacion de la nota
-                    Text(
-                      DateFormat.yMMMd().format(note.createdTime),
-                      style: TextStyle(color: Colors.white38),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        "Programada para el dia:",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.purple.shade300,
+                          fontSize: 18,
+                        ),
+                      ),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        DateFormat.yMMMd().format(note.createdTime),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.purple.shade200,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 50),
                     //Contenido de la nota
-                    Text(
-                      note.description,
-                      style: TextStyle(color: Colors.white70, fontSize: 18),
-                    )
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        "Te mensaje motivacional es:",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.blue.shade200, fontSize: 20),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        note.description,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.blue.shade100, fontSize: 20),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -86,7 +127,10 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
       });
 
   Widget deleteButton() => IconButton(
-        icon: Icon(Icons.delete),
+        icon: Icon(
+          Icons.delete,
+          color: Colors.red,
+        ),
         onPressed: () async {
           await NotesDatabase.instance.delete(widget.noteId);
 

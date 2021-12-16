@@ -3,38 +3,15 @@ import 'package:proyecto_cr/presentation/pages/model/user.dart';
 import 'package:proyecto_cr/presentation/pages/principal/notes_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:proyecto_cr/presentation/pages/principal/principal.dart';
-import 'package:proyecto_cr/riverpod/providers/providers.dart';
 import 'package:riverpod/riverpod.dart';
-
-/*
-class Bloquear extends ConsumerWidget {
-  const Bloquear({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    //final counternotificacion = ref.watch(notificacionStateProvider);
-    //final counterbloqueo = refe.watch(bloqueoStateProvider);
-
-    return Scaffold(
-      body: Container(
-        child: ElevatedButton(
-          onPressed: () {
-
-            Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Principal()));
-          },
-          child: Text("hola"),
-        ),
-      ),
-    );
-  }
-}
-*/
 
 class Bloqueo extends StatefulWidget {
   User usuario;
+  String mensaje;
   Bloqueo({
-    Key? key, required this.usuario
+    Key? key, 
+    required this.usuario,
+    required this.mensaje,
   }) : super(key: key);
 
   @override
@@ -51,6 +28,7 @@ class _BloqueoState extends State<Bloqueo> {
   late String nomUser;
   late String nomCorreo;
   late String nomContra;
+  late String men;
 
   @override
   void initState() {
@@ -61,6 +39,7 @@ class _BloqueoState extends State<Bloqueo> {
     nomUser = widget.usuario.name;
     nomCorreo = widget.usuario.correo;
     nomContra = widget.usuario.contra;
+    men = widget.mensaje;
   }
 
   void checar() {
@@ -82,6 +61,7 @@ class _BloqueoState extends State<Bloqueo> {
             actions: <Widget>[
               ElevatedButton(
                   onPressed: () {
+                    Navigator.pop(context, "Regresar");
                     _alertDialog2();
                   },
                   child: Text("Si")),
@@ -104,6 +84,7 @@ class _BloqueoState extends State<Bloqueo> {
             actions: <Widget>[
               ElevatedButton(
                   onPressed: () {
+                    Navigator.pop(context, "Regresar");
                     _alertDialog3();
                   },
                   child: Text("Si")),
@@ -126,8 +107,8 @@ class _BloqueoState extends State<Bloqueo> {
             actions: <Widget>[
               ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Principal(usuario: user,)));
+                    Navigator.pop(context, "Regresar");
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Principal(usuario: user,)));
                   },
                   child: Text("Si")),
               ElevatedButton(
@@ -179,11 +160,11 @@ class _BloqueoState extends State<Bloqueo> {
               height: 50,
             ),
             Text(
-              'Concentrate, tu puedes lograrlo ;)',
+              men,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 25,
                 fontWeight: FontWeight.w600,
                 letterSpacing: .8,
                 height: 1,
